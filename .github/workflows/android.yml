@@ -29,10 +29,12 @@ jobs:
         run: |
           cd mobile
           npm ci || npm install
+          npm install @capacitor/android
 
-      - name: Sync Capacitor
+      - name: Add & Sync Capacitor Android
         run: |
           cd mobile
+          npx cap add android || true
           npx cap sync android
 
       - name: Build Android APK
