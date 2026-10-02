@@ -25,16 +25,13 @@ jobs:
       - name: Install Root Dependencies
         run: npm ci || npm install
 
-      - name: Install Mobile Dependencies
+      - name: Install Mobile Dependencies & Add Android
         run: |
           cd mobile
           npm ci || npm install
           npm install @capacitor/core @capacitor/cli @capacitor/android
-
-      - name: Create and Sync Android Platform
-        run: |
-          cd mobile
           npx cap add android || true
+          npx cap copy android
           npx cap sync android
 
       - name: Build Android APK
@@ -43,7 +40,7 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      - name: Upload APK
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: PresenterRemote-APK
