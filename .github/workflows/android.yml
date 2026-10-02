@@ -31,10 +31,13 @@ jobs:
           npm ci || npm install
           npm install @capacitor/core @capacitor/cli @capacitor/android
 
-      - name: Add & Sync Capacitor Android
+      - name: Add and Sync Capacitor Android
         run: |
           cd mobile
-          npx cap add android || true
+          if [ ! -d "android" ]; then
+            npx cap add android
+          fi
+          npx cap copy android
           npx cap sync android
 
       - name: Build Android APK
