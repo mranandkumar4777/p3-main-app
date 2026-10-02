@@ -22,14 +22,19 @@ jobs:
         with:
           node-version: 18
 
-      - name: Build Android App Project
+      - name: Clean & Prepare Mobile Folder
         run: |
           cd mobile
+          rm -rf node_modules android www capacitor.config.* package-lock.json
           npm install
           npm install @capacitor/core @capacitor/cli @capacitor/android
           mkdir -p www
-          cp remote.html www/index.html || true
+          cp remote.html www/index.html || echo "index.html created" > www/index.html
           npx cap init "Presenter Remote" "com.presenter.remote" --web-dir www
+
+      - name: Add Android Platform & Sync
+        run: |
+          cd mobile
           npx cap add android
           npx cap sync android
 
@@ -39,7 +44,7 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      - name: Upload APK
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: PresenterRemote-APK
